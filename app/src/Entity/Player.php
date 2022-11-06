@@ -14,7 +14,7 @@ use Symfony\Component\Uid\Uuid;
 class Player
 {
     #[ORM\Id]
-    #[ORM\Column]
+    #[ORM\Column(type: 'uuid')]
     private Uuid $id;
 
     #[ORM\Column(length: 20)]

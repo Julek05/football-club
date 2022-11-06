@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\CQRS\ReadModel\Query\GetPlayerQueryInterface;
 use App\CQRS\WriteModel\Command\AddPlayerCommand;
 use App\Request\AddPlayerRequest;
 use Psr\Log\LoggerInterface;
@@ -39,7 +40,7 @@ class PlayerController extends AbstractController
 			$errors = $this->validator->validate($addPlayerRequest);
 
 			if (count($errors) > 0) {
-				return $this->badRequest((string) $errors);
+				return $this->badRequest((string)$errors);
 			}
 
 			$addPlayerCommand = new AddPlayerCommand(
@@ -58,5 +59,16 @@ class PlayerController extends AbstractController
 		}
 
 		return $this->success(['id' => $addPlayerCommand->id]);
+	}
+
+
+	#[Route('/player/{id}', name: 'get_player', methods: ['GET'])]
+	public function getPlayer(string $id, GetPlayerQueryInterface $getPlayerQuery): JsonResponse
+	{
+		if (Uuid::isValid($id) === false) {
+			$this->badRequest('Id is not valid');
+		}
+
+		return $this->success($getPlayerQuery->execute(Uuid::fromString($id)));
 	}
 }
