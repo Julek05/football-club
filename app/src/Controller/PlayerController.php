@@ -6,12 +6,12 @@ namespace App\Controller;
 
 use App\CQRS\ReadModel\Query\GetPlayerQueryInterface;
 use App\CQRS\WriteModel\Command\AddPlayerCommand;
-use App\Request\AddPlayerRequest;
+use App\Enum\HttpSuccessStatusCodeEnum;
+use App\Request\Player\AddPlayerRequest;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Log\Logger;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Uid\Uuid;
@@ -58,7 +58,7 @@ class PlayerController extends AbstractController
 			return $this->internalServerError();
 		}
 
-		return $this->success(['id' => $addPlayerCommand->id]);
+		return $this->success(['id' => $addPlayerCommand->id], HttpSuccessStatusCodeEnum::CREATED);
 	}
 
 

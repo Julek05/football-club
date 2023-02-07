@@ -37,7 +37,8 @@ class Player
 		string $name,
 		string $surname,
 		int $age,
-		string $country
+		string $country,
+		\DateTimeImmutable $createdAt = new \DateTimeImmutable()
 	) {
 		$this->id = $id;
 		$this->name = $name;

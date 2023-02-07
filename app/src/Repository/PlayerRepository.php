@@ -13,21 +13,17 @@ class PlayerRepository extends ServiceEntityRepository
         parent::__construct($registry, Player::class);
     }
 
-    public function save(Player $entity, bool $flush = false): void
+    public function save(Player $entity): void
     {
         $this->_em->persist($entity);
 
-        if ($flush) {
-            $this->_em->flush();
-        }
+        $this->_em->flush();
     }
 
-    public function remove(Player $entity, bool $flush = false): void
+    public function remove(Player $entity): void
     {
-        $this->getEntityManager()->remove($entity);
+        $this->_em->remove($entity);
 
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
+        $this->_em->flush();
     }
 }
