@@ -26,6 +26,6 @@ final class AddPlayerHandler
 			$command->country,
 		);
 
-		$this->playerRepository->save($player, true);
+		$this->playerRepository->save($player);
 	}
 }
