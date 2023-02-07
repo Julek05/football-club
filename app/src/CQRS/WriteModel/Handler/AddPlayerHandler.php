@@ -19,7 +19,6 @@ final class AddPlayerHandler
 	public function __invoke(AddPlayerCommand $command): void
 	{
 		$player = new Player(
-			$command->id,
 			$command->name,
 			$command->surname,
 			$command->age,

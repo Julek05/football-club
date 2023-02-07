@@ -14,7 +14,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\Trait\ResponseTrait;
@@ -44,7 +43,6 @@ class PlayerController extends AbstractController
 			}
 
 			$addPlayerCommand = new AddPlayerCommand(
-				Uuid::v4(),
 				$addPlayerRequest->name,
 				$addPlayerRequest->surname,
 				$addPlayerRequest->age,
@@ -58,17 +56,13 @@ class PlayerController extends AbstractController
 			return $this->internalServerError();
 		}
 
-		return $this->success(['id' => $addPlayerCommand->id], HttpSuccessStatusCodeEnum::CREATED);
+		return $this->success(null, HttpSuccessStatusCodeEnum::CREATED);
 	}
 
 
 	#[Route('/player/{id}', name: 'get_player', methods: ['GET'])]
-	public function getPlayer(string $id, GetPlayerQueryInterface $getPlayerQuery): JsonResponse
+	public function getPlayer(int $id, GetPlayerQueryInterface $getPlayerQuery): JsonResponse
 	{
-		if (Uuid::isValid($id) === false) {
-			$this->badRequest('Id is not valid');
-		}
-
-		return $this->success($getPlayerQuery->execute(Uuid::fromString($id)));
+		return $this->success($getPlayerQuery->execute($id));
 	}
 }

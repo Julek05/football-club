@@ -14,8 +14,9 @@ use Symfony\Component\Uid\Uuid;
 class Player
 {
     #[ORM\Id]
-    #[ORM\Column(type: 'uuid')]
-    private Uuid $id;
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    private int $id;
 
     #[ORM\Column(length: 20)]
     private string $name;
@@ -33,14 +34,12 @@ class Player
 	private \DateTimeImmutable $createdAt;
 
 	public function __construct(
-		Uuid $id,
 		string $name,
 		string $surname,
 		int $age,
 		string $country,
 		\DateTimeImmutable $createdAt = new \DateTimeImmutable()
 	) {
-		$this->id = $id;
 		$this->name = $name;
 		$this->surname = $surname;
 		$this->age = $age;
@@ -48,7 +47,7 @@ class Player
 		$this->createdAt = new \DateTimeImmutable();
 	}
 
-	public function getId(): Uuid
+	public function getId(): int
     {
         return $this->id;
     }

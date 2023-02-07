@@ -20,7 +20,7 @@ final class GetPlayerQuery implements GetPlayerQueryInterface
 	/**
 	 * @throws NonUniqueResultException
 	 */
-	public function execute(Uuid $id): ?PlayerDTO
+	public function execute(int $id): ?PlayerDTO
 	{
 		$queryBuilder = $this->entityManager->createQueryBuilder();
 
