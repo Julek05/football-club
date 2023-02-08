@@ -9,7 +9,6 @@ use App\CQRS\ReadModel\Query\GetPlayerQueryInterface;
 use App\Entity\Player;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
-use Symfony\Component\Uid\Uuid;
 
 final class GetPlayerQuery implements GetPlayerQueryInterface
 {

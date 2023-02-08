@@ -38,6 +38,13 @@ trait ResponseTrait
 		);
 	}
 
+	public function notFoundResponse(): JsonResponse
+	{
+		return new JsonResponse(
+			['message' => Response::$statusTexts[Response::HTTP_NOT_FOUND]],
+			Response::HTTP_NOT_FOUND);
+	}
+
 	public function internalServerError(): JsonResponse
 	{
 		return new JsonResponse(

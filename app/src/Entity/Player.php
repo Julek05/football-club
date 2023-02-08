@@ -7,7 +7,6 @@ namespace App\Entity;
 use App\Repository\PlayerRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: PlayerRepository::class)]
 #[ORM\Table(name: "players")]
@@ -44,7 +43,7 @@ class Player
 		$this->surname = $surname;
 		$this->age = $age;
 		$this->country = $country;
-		$this->createdAt = new \DateTimeImmutable();
+		$this->createdAt = $createdAt;
 	}
 
 	public function getId(): int

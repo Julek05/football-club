@@ -6,12 +6,15 @@ namespace App\Controller;
 
 use App\CQRS\ReadModel\Query\GetPlayerQueryInterface;
 use App\CQRS\WriteModel\Command\AddPlayerCommand;
+use App\CQRS\WriteModel\Command\DeletePlayerCommand;
+use App\CQRS\WriteModel\Exception\NotFoundPlayerException;
 use App\Enum\HttpSuccessStatusCodeEnum;
 use App\Request\Player\AddPlayerRequest;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\ConstraintViolationList;
@@ -63,6 +66,38 @@ class PlayerController extends AbstractController
 	#[Route('/player/{id}', name: 'get_player', methods: ['GET'])]
 	public function getPlayer(int $id, GetPlayerQueryInterface $getPlayerQuery): JsonResponse
 	{
-		return $this->success($getPlayerQuery->execute($id));
+		try {
+			$player = $getPlayerQuery->execute($id);
+		} catch (\Throwable $e) {
+			$this->logger->error($e->getMessage());
+
+			return $this->internalServerError();
+		}
+
+		if ($player === null) {
+			return $this->notFoundResponse();
+		}
+
+		return $this->success($player);
+	}
+
+	#[Route('/player/{id}', name: 'delete_player', methods: ['delete'])]
+	public function deletePlayer(int $id): JsonResponse
+	{
+		try {
+			$deletePlayerCommand = new DeletePlayerCommand($id);
+
+			$this->bus->dispatch($deletePlayerCommand);
+		} catch (HandlerFailedException $e) {
+			if ($e->getPrevious() instanceof NotFoundPlayerException) {
+				return $this->notFoundResponse();
+			}
+
+			$this->logger->error($e->getMessage());
+
+			return $this->internalServerError();
+		}
+
+		return $this->success();
 	}
 }
